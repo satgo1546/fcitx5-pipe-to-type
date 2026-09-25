@@ -27,11 +27,10 @@ public:
 			m_fd, fcitx::IOEventFlag::In,
 			[this](fcitx::EventSourceIO *, int fd, fcitx::IOEventFlags) {
 				auto *ic = m_instance->lastFocusedInputContext();
-				if (!ic) return false;
 				char buf[4096];
 				ssize_t n;
 				while ((n = read(fd, buf, sizeof(buf))) > 0) {
-					ic->commitString(std::string(buf, n));
+					if (ic) ic->commitString(std::string(buf, n));
 				}
 				return true;
 			}
